@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fazenda do Futuro • Simulador 2047</title>
+    
+    <!-- Tailwind CSS via CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    
+    <!-- Nosso CSS separado -->
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="bg-slate-950 text-slate-200 futuristic-bg">
+    
+    <!-- Navbar -->
+    <nav class="border-b border-slate-800 bg-slate-900/80 backdrop-blur-lg sticky top-0 z-50">
+        <div class="max-w-screen-2xl mx-auto px-8 py-5 flex items-center justify-between">
+            <div class="flex items-center gap-x-4">
+                <div class="w-12 h-12 bg-gradient-to-br from-emerald-400 to-teal-500 rounded-2xl flex items-center justify-center shadow-lg shadow-emerald-500/30">
+                    <i class="fa-solid fa-seedling text-white text-3xl"></i>
+                </div>
+                <div>
+                    <h1 class="font-display text-3xl font-semibold tracking-tighter">Fazenda do Futuro</h1>
+                    <p class="text-emerald-400 text-xs tracking-[2px] -mt-1">SIMULADOR 2047</p>
+                </div>
+            </div>
+            
+            <div class="flex items-center gap-x-3">
+                <div class="px-4 py-2 bg-slate-900 border border-slate-700 rounded-2xl flex items-center gap-x-2 text-sm">
+                    <i class="fa-solid fa-robot text-emerald-400"></i>
+                    <span class="font-medium">IA + Robótica Ativada</span>
+                </div>
+                <div class="px-4 py-2 bg-slate-900 border border-slate-700 rounded-2xl text-sm flex items-center gap-x-2">
+                    <span>Dia</span>
+                    <span id="day-counter" class="font-mono font-bold text-emerald-400 text-xl">1</span>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="max-w-screen-2xl mx-auto px-8 py-8">
+        
+        <!-- Objetivo -->
+        <div class="mb-6 flex items-center justify-between bg-slate-900 border border-slate-700 rounded-3xl px-6 py-4">
+            <div class="flex items-center gap-x-3">
+                <i class="fa-solid fa-tachometer-alt text-emerald-400 text-xl"></i>
+                <div>
+                    <span class="font-semibold">Missão Atual:</span> 
+                    <span class="text-emerald-400">Alcançar 5.000 créditos e 90% de sustentabilidade</span>
+                </div>
+            </div>
+            <div id="mission-progress" class="text-right text-sm">
+                <span class="font-mono text-emerald-400">0/2</span>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 xl:grid-cols-12 gap-6">
+            
+            <!-- ÁREA DA FAZENDA -->
+            <div class="xl:col-span-7">
+                <div class="flex items-center justify-between mb-4 px-1">
+                    <div>
+                        <h2 class="section-header font-semibold flex items-center gap-x-2">
+                            <i class="fa-solid fa-layer-group"></i> 
+                            <span>Área de Cultivo</span>
+                        </h2>
+                        <p class="text-slate-400 text-sm">6 parcelas inteligentes</p>
+                    </div>
+                    <button onclick="advanceDay()" 
+                            class="flex items-center gap-x-2 px-6 py-3 bg-emerald-600 hover:bg-emerald-500 active:bg-emerald-700 transition-all rounded-2xl font-semibold text-sm shadow-lg shadow-emerald-600/30">
+                        <i class="fa-solid fa-forward"></i>
+                        <span>AVANÇAR 1 DIA</span>
+                    </button>
+                </div>
+
+                <!-- Grid da Fazenda -->
+                <div id="farm-grid" 
+                     class="farm-grid grid grid-cols-2 md:grid-cols-3 gap-4 p-5 rounded-3xl border border-slate-700 min-h-[420px]">
+                </div>
+                
+                <div class="flex gap-3 mt-4 px-1">
+                    <button onclick="harvestAll()" 
+                            class="flex-1 py-3 bg-yellow-500 hover:bg-yellow-400 transition-all text-yellow-950 font-bold rounded-2xl flex items-center justify-center gap-x-2 text-sm">
+                        <i class="fa-solid fa-hand-holding-seedling"></i>
+                        <span>COLHER TUDO</span>
+                    </button>
+                    <button onclick="resetSimulation()" 
+                            class="px-6 py-3 bg-slate-800 hover:bg-slate-700 transition-all rounded-2xl text-sm flex items-center gap-x-2 border border-slate-600">
+                        <i class="fa-solid fa-redo"></i>
+                        <span>Reiniciar</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- PAINEL LATERAL -->
+            <div class="xl:col-span-5 space-y-6">
+                
+                <!-- RECURSOS -->
+                <div class="bg-slate-900 border border-slate-700 rounded-3xl p-6">
+                    <h3 class="font-semibold mb-4 flex items-center gap-x-2 text-lg">
+                        <i class="fa-solid fa-chart-line text-emerald-400"></i> 
+                        Recursos
+                    </h3>
+                    
+                    <div class="space-y-5">
+                        <!-- Créditos -->
+                        <div>
+                            <div class="flex justify-between text-sm mb-1.5">
+                                <div class="flex items-center gap-x-2">
+                                    <i class="fa-solid fa-coins text-yellow-400"></i>
+                                    <span class="font-medium">Créditos</span>
+                                </div>
+                                <span id="credits-value" class="resource-value font-mono font-bold text-yellow-400 text-xl">1250</span>
+                            </div>
+                        </div>
+                        
+                        <!-- Energia -->
+                        <div>
+                            <div class="flex justify-between text-sm mb-1.5">
+                                <div class="flex items-center gap-x-2">
+                                    <i class="fa-solid fa-bolt text-sky-400"></i>
+                                    <span class="font-medium">Energia</span>
+                                </div>
+                                <span id="energy-value" class="resource-value font-mono font-bold text-sky-400">420</span>
+                            </div>
+                            <div class="h-2 bg-slate-700 rounded-full overflow-hidden">
+                                <div id="energy-bar" class="h-2 bg-sky-400 transition-all" style="width: 84%"></div>
+                            </div>
+                        </div>
+                        
+                        <!-- Água -->
+                        <div>
+                            <div class="flex justify-between text-sm mb-1.5">
+                                <div class="flex items-center gap-x-2">
+                                    <i class="fa-solid fa-tint text-cyan-400"></i>
+                                    <span class="font-medium">Água</span>
+                                </div>
+                                <span id="water-value" class="resource-value font-mono font-bold text-cyan-400">380</span>
+                            </div>
+                            <div class="h-2 bg-slate-700 rounded-full overflow-hidden">
+                                <div id="water-bar" class="h-2 bg-cyan-400 transition-all" style="width: 76%"></div>
+                            </div>
+                        </div>
+                        
+                        <!-- Sustentabilidade -->
+                        <div>
+                            <div class="flex justify-between text-sm mb-1.5">
+                                <div class="flex items-center gap-x-2">
+                                    <i class="fa-solid fa-leaf text-emerald-400"></i>
+                                    <span class="font-medium">Sustentabilidade</span>
+                                </div>
+                                <span id="sustainability-value" class="resource-value font-mono font-bold text-emerald-400">68%</span>
+                            </div>
+                            <div class="h-3 bg-slate-700 rounded-full overflow-hidden">
+                                <div id="sustainability-bar" 
+                                     class="h-3 bg-gradient-to-r from-emerald-400 to-teal-400 transition-all rounded-full" 
+                                     style="width: 68%"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ESCOLHA DE CULTURA -->
+                <div class="bg-slate-900 border border-slate-700 rounded-3xl p-6">
+                    <h3 class="font-semibold mb-4 flex items-center gap-x-2">
+                        <i class="fa-solid fa-seedling text-emerald-400"></i> 
+                        Escolha a Cultura
+                    </h3>
+                    
+                    <div id="crop-selector" class="space-y-3">
+                        <!-- Populado via JavaScript -->
+                    </div>
+                </div>
+
+                <!-- MÓDULO PECUÁRIO -->
+                <div class="bg-slate-900 border border-slate-700 rounded-3xl p-6">
+                    <div class="flex justify-between items-center mb-4">
+                        <h3 class="font-semibold flex items-center gap-x-2">
+                            <i class="fa-solid fa-cow text-amber-400"></i> 
+                            Pecuária Inteligente
+                        </h3>
+                        <span id="livestock-count" class="font-mono text-amber-400 font-bold">4</span>
+                    </div>
+                    
+                    <div class="text-sm text-slate-300 mb-4">
+                        Produção diária: <span class="font-semibold text-amber-400">+48 créditos</span> + <span class="text-emerald-400">+3 sustentabilidade</span>
+                    </div>
+                    
+                    <button onclick="buyLivestock()" 
+                            class="w-full py-2.5 text-sm bg-amber-600 hover:bg-amber-500 transition-all rounded-2xl font-semibold flex items-center justify-center gap-x-2">
+                        <i class="fa-solid fa-plus"></i>
+                        <span>Comprar +2 Vacas Robóticas (800 ¢)</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast -->
+    <div id="toast" class="hidden fixed bottom-6 right-6 bg-slate-800 border border-slate-600 text-white px-5 py-4 rounded-2xl shadow-2xl max-w-sm z-50">
+        <div class="flex gap-3">
+            <div id="toast-icon" class="text-xl mt-0.5"></div>
+            <div>
+                <div id="toast-title" class="font-semibold"></div>
+                <div id="toast-desc" class="text-sm text-slate-300"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- JavaScript separado -->
+    <script src="script.js"></script>
+</body>
+</html>
